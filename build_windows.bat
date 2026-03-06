@@ -9,7 +9,7 @@ call .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt pyinstaller
 
-pyinstaller --noconfirm --clean --onefile --windowed --name STCloseUpdater st_close_gui.py
+pyinstaller --noconfirm --clean --onefile --windowed --name STCloseUpdater --collect-data akshare --collect-submodules akshare st_close_gui.py
 
 echo.
 echo Build complete. EXE: dist\STCloseUpdater.exe

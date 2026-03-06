@@ -3,8 +3,6 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox
 
-from update_st_close import process_excel_file
-
 
 class App:
     def __init__(self, root: tk.Tk) -> None:
@@ -60,20 +58,23 @@ class App:
 
     def _do_process(self, excel_path: Path) -> None:
         try:
-            out = process_excel_file(excel_path)
-            self.root.after(0, self._on_success, out)
+            # Lazy import improves startup resilience and works in PyInstaller onefile mode.
+            from update_st_close import process_excel_file
+
+            output_path = process_excel_file(excel_path)
+            self.root.after(0, self._on_success, output_path)
         except Exception as e:  # noqa: BLE001
-            self.root.after(0, self._on_error, e)
+            self.root.after(0, self._on_error, str(e))
 
     def _on_success(self, output_path: Path) -> None:
         self.confirm_btn.config(state=tk.NORMAL)
         self.status_var.set(f"完成: {output_path}")
         messagebox.showinfo("完成", f"处理完成，输出文件:\n{output_path}")
 
-    def _on_error(self, err: Exception) -> None:
+    def _on_error(self, err_text: str) -> None:
         self.confirm_btn.config(state=tk.NORMAL)
         self.status_var.set("处理失败")
-        messagebox.showerror("处理失败", str(err))
+        messagebox.showerror("处理失败", err_text)
 
 
 def main() -> None:

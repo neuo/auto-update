@@ -22,7 +22,7 @@ jobs:
 
       - name: Build exe
         run: |
-          pyinstaller --noconfirm --clean --onefile --windowed --name STCloseUpdater st_close_gui.py
+          pyinstaller --noconfirm --clean --onefile --windowed --name STCloseUpdater --collect-data akshare --collect-submodules akshare st_close_gui.py
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

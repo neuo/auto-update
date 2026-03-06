@@ -1,11 +1,27 @@
 import datetime as dt
 import argparse
+import os
+import sys
 import time
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import akshare as ak  # type: ignore
 import pandas as pd
+
+
+def ensure_std_streams() -> None:
+    """
+    In PyInstaller --windowed mode, stdout/stderr can be None.
+    Some third-party libs (e.g. tqdm in AKShare) require writable streams.
+    """
+    if sys.stdout is None:
+        sys.stdout = open(os.devnull, "w")
+    if sys.stderr is None:
+        sys.stderr = open(os.devnull, "w")
+
+
+ensure_std_streams()
 
 
 def get_effective_trade_date_and_source() -> Tuple[dt.date, str]:
